@@ -23,6 +23,6 @@ module.exports = (sequelize) => {
       type: Sequelize.STRING,
     }
   });
-
+  
   return User;
 }
