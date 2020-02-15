@@ -18,7 +18,15 @@ const sequelize = new Sequelize({dialect: 'sqlite', storage: 'fsjstd-restapi.db'
   try {
     // test connection to the database
     await sequelize.authenticate();
-    console.log('Connection to the database has been successful. Woo.');
+    console.log('Connection to the database has been successful.');
+
+    // sync defined models with the database
+    console.log('Syncing models with the database');
+    await sequelize.sync({force: true});
+
+    
+
+
   } catch (err) {
     console.error('Failed to connect to database: ' + err);
   }
