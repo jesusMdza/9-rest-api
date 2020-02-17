@@ -1,12 +1,11 @@
-'use strict'
-
+'use strict';
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-  class Course extends Sequelize.model {}
+  class Course extends Sequelize.Model {}
   Course.init({
     id: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
