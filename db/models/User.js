@@ -1,9 +1,8 @@
-'use strict'
-
+'use strict';
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-  class User extends Sequelize.model {}
+  class User extends Sequelize.Model {}
   User.init({
     id: {
       type: Sequelize.INTEGER,
@@ -12,15 +11,33 @@ module.exports = (sequelize) => {
     },
     firstName: {
       type: Sequelize.STRING,
-      notEmpty: true
+      notEmpty: true,
+      validate: {
+        is: {
+          args: /^[a-z]+$/i,
+          msg: "First name must contain letters only"
+        }
+      }
     },
     lastName: {
       type: Sequelize.STRING,
-      notEmpty: true
+      notEmpty: true,
+      validate: {
+        is: {
+          args: /^[a-z]+$/i,
+          msg: "Last name must contain letters only"
+        }
+      }
     },
     emailAddress: {
       type: Sequelize.STRING,
-      notEmpty: true
+      notEmpty: true,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: "Email must be in correct format. (e.g., example@domain.com)"
+        }
+      }
     },
     password: {
       type: Sequelize.STRING,
