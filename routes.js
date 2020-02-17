@@ -2,9 +2,10 @@
 
 const express = require('express');
 const router = express.Router();
+const Sequelize = require('sequelize');
 
-const User = require('./models/User');
-const Course = require('./models/Course');
+const db = require('./db');
+const { Course, User } = db.models;
 
 // wraps each route function callback
 function asyncHandler(callback) {
@@ -22,7 +23,6 @@ function asyncHandler(callback) {
 router.get('/users', asyncHandler(async (req, res, next) => {
   try {
     const users = await User.findAll();
-    console.log(users);
     res.status(200).json(users);
   } catch (error) {
     throw error
@@ -32,23 +32,28 @@ router.get('/users', asyncHandler(async (req, res, next) => {
 // POST user(s)
 router.post('/users', asyncHandler(async (req, res, next) => {
   try {
-    const user = await req.body;
-    res.status(201);
-    users.push(user);
+    const user = await User.create(req.body);
+    res.status(201).end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
-      res.status(400).json({message: 'Validation error'});
+      const errorMessages = [];
+      console.log(error.errors);
+      error.errors.map(error => errorMessages.push(error.message));
+      res.status(400).json({message: errorMessages});
+    } else {
+      throw error;
     }
   }
 }));
 
 // GET course(s)
 router.get('/courses', asyncHandler(async (req, res, next) => {
-  // if (!user) {
-    
-  // } else {
-  //   res.status(200).json({user});
-  // }
+  try {
+    const courses = await Course.findAll();
+    res.status(200).json(courses);
+  } catch (error) {
+    throw error;
+  }
 }));
 
 // GET course(s) by Id
