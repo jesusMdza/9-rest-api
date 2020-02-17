@@ -2,30 +2,26 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const Sequelize = require('sequelize');
 const routes = require('./routes');
+const Sequelize = require('sequelize');
+
+const db = require('./db');
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
 const app = express();
 
-// instantiate Sequelize and configure database
-const sequelize = new Sequelize({dialect: 'sqlite', storage: 'fsjstd-restapi.db'});
-
 // IIFE
 (async () => {
   try {
     // test connection to the database
-    await sequelize.authenticate();
+    await db.sequelize.authenticate();
     console.log('Connection to the database has been successful.');
 
     // sync defined models with the database
     console.log('Syncing models with the database');
-    await sequelize.sync({force: true});
-
-    
-
+    await db.sequelize.sync({force: true});
 
   } catch (err) {
     console.error('Failed to connect to database: ' + err);
@@ -34,6 +30,9 @@ const sequelize = new Sequelize({dialect: 'sqlite', storage: 'fsjstd-restapi.db'
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
+
+// a built-in middleware function in Express that parses incoming requests with JSON payloads
+app.use(express.json());
 
 // TODO setup your api routes here
 app.use('/api', routes);
