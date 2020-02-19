@@ -27,6 +27,7 @@ module.exports = (sequelize) => {
     },
   }, {sequelize});
 
+  // one-to-many association between User (source) and Course (target)
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
       foreignKey: {
