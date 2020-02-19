@@ -5,7 +5,7 @@ const router = express.Router();
 const Sequelize = require('sequelize');
 
 const db = require('./db');
-const { Course, User } = db.models;
+const { Course, User } = db.sequelize.models;
 
 // wraps each route function callback
 function asyncHandler(callback) {
@@ -23,6 +23,7 @@ function asyncHandler(callback) {
 router.get('/users', asyncHandler(async (req, res, next) => {
   try {
     const users = await User.findAll();
+    console.log(users);
     res.status(200).json(users);
   } catch (error) {
     throw error
@@ -37,7 +38,6 @@ router.post('/users', asyncHandler(async (req, res, next) => {
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
       const errorMessages = [];
-      console.log(error.errors);
       error.errors.map(error => errorMessages.push(error.message));
       res.status(400).json({message: errorMessages});
     } else {
