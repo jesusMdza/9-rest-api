@@ -6,11 +6,16 @@ const routes = require('./routes');
 const Sequelize = require('sequelize');
 
 const db = require('./db');
+const { Course, User } = db.sequelize.models;
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
 const app = express();
+
+// set our port
+var port = normalizePort(process.env.PORT || '5000');
+app.set('port', port);
 
 // IIFE
 (async () => {
@@ -21,7 +26,12 @@ const app = express();
 
     // sync defined models with the database
     console.log('Syncing models with the database');
-    await db.sequelize.sync({force: true});
+    await db.sequelize.sync({force: true})
+      .then(() => {
+        app.listen(app.get('port'), () => {
+          console.log(`Express server is listening on port ${port}`);
+        });
+      });
 
   } catch (err) {
     console.error('Failed to connect to database: ' + err);
@@ -63,10 +73,22 @@ app.use((err, req, res, next) => {
   });
 });
 
-// set our port
-app.set('port', process.env.PORT || 5000);
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
-// start listening on our port
-const server = app.listen(app.get('port'), () => {
-  console.log(`Express server is listening on port ${server.address().port}`);
-});
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
