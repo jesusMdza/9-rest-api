@@ -33,11 +33,12 @@ module.exports = (sequelize) => {
       type: Sequelize.STRING,
       notEmpty: false
     },
-  }, {sequelize});
+  }, {sequelize});  
 
   // one-to-many association between User (source) and Course (target)
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
+      as: 'owner',
       foreignKey: {
         fieldName: 'userId',
         allowNull: false

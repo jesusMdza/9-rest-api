@@ -53,6 +53,7 @@ module.exports = (sequelize) => {
   // one-to-many association between User (Source) and Course (Target)
   User.associate = (models) => {
     User.hasMany(models.Course, {
+      as: 'owner',
       foreignKey: {
         fieldName: 'userId',
         allowNull: false
