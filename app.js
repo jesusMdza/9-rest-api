@@ -21,13 +21,9 @@ app.set('port', port);
 (async () => {
   try {
     // test connection to the database
-    await db.sequelize.authenticate();
-    console.log('Connection to the database has been successful.');
-
-    // sync defined models with the database
-    console.log('Syncing models with the database');
-    await db.sequelize.sync({force: true})
+    await db.sequelize.authenticate()
       .then(() => {
+        console.log('Connection to the database has been successful.');
         app.listen(app.get('port'), () => {
           console.log(`Express server is listening on port ${port}`);
         });
