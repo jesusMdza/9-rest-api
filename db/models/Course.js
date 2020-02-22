@@ -7,15 +7,23 @@ module.exports = (sequelize) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     title: {
       type: Sequelize.STRING,
-      notEmpty: true
+      validate: {
+        notEmpty: {
+          msg: 'Title is required'
+        }
+      }
     },
     description: {
       type: Sequelize.STRING,
-      notEmpty: true
+      validate: {
+        notEmpty: {
+          msg: 'Description is required'
+        }
+      }
     },
     estimatedTime: {
       type: Sequelize.STRING,
