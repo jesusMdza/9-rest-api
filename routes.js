@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 const bcryptjs = require('bcryptjs');
+const auth = require('basic-auth');
 
 const db = require('./db');
 const { Course, User } = db.sequelize.models;
@@ -20,8 +21,49 @@ function asyncHandler(callback) {
   }
 }
 
+// TO DO ========== FIND A WAY TO LOG A MESSAGE WHEN AUTHENTICATION FAILS
+
+// identify a user based on their credentials
+const authenticateUser = async (req, res, next) => {
+  let message;
+
+  // attempts to retrieve signed in user's credentials
+  // returns object if successful {name: example@domain.com, pass: somePassword}
+  const credentials = auth(req);
+  console.log(credentials);
+
+  // if credentials are available, search through db
+  // to find the user by email address
+  // returns an array of users found
+  if (credentials) {
+    const user = await User.findAll({
+      where: {
+        emailAddress: credentials.name
+      }
+    });
+
+    // if user email address exists in db
+    // verify the user's password in db against the 
+    // credential's password given
+    if (user) {
+      const authenticated = bcryptjs
+      .compareSync(credentials.pass, user[0].dataValues.password);
+    } else {
+      message = `User ${user.emailAddress} not found.`;
+    }
+  } else {
+    message = 'Authorization header not found'
+  }
+
+  if (message) {
+    res.status(401).json({message: 'Access Denied'});
+  }
+
+  next();
+}
+
 // GET user(s)
-router.get('/users', asyncHandler(async (req, res, next) => {
+router.get('/users', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const users = await User.findAll();
     console.log(users);
@@ -86,10 +128,9 @@ router.get('/courses/:id', asyncHandler(async (req, res, next) => {
 }));
 
 // POST course(s)
-router.post('/courses', asyncHandler(async (req, res, next) => {
+router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
-    // req.body.userId = await User.find
-    const course = await Course.create(req.body);
+    await Course.create(req.body);
     res.status(201).end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
@@ -103,7 +144,7 @@ router.post('/courses', asyncHandler(async (req, res, next) => {
 }));
 
 // PUT (update) course(s)
-router.put('/courses/:id', asyncHandler(async (req, res, next) => {
+router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const course = await Course.findByPk(req.params.id);
     await course.update(req.body);
@@ -120,7 +161,7 @@ router.put('/courses/:id', asyncHandler(async (req, res, next) => {
 }));
 
 // DELETE course(s)
-router.delete('/courses/:id', asyncHandler(async (req, res, next) => {
+router.delete('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const course = await Course.findByPk(req.params.id);
     await course.destroy();
