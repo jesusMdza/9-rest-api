@@ -109,12 +109,18 @@ router.put('/courses/:id', asyncHandler(async (req, res, next) => {
     await course.update(req.body);
     res.status(204).end();
   } catch (error) {
-    throw error;
+    if (error.name === 'SequelizeValidationError') {
+      const errorMessages = [];
+      error.errors.map(error => errorMessages.push(error.message));
+      res.status(400).json({message: errorMessages});
+    } else {
+      throw error;
+    }
   }
 }));
 
 // DELETE course(s)
-router.delete('/courses', asyncHandler(async (req, res, next) => {
+router.delete('/courses/:id', asyncHandler(async (req, res, next) => {
   try {
     const course = await Course.findByPk(req.params.id);
     await course.destroy();
