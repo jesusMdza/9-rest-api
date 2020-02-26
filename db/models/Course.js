@@ -1,6 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
 
+// Course Model
 module.exports = (sequelize) => {
   class Course extends Sequelize.Model {}
   Course.init({
@@ -35,7 +36,7 @@ module.exports = (sequelize) => {
     },
   }, {sequelize});  
 
-  // one-to-many association between User (source) and Course (target)
+  // one-to-many association between Course (target) and User (source)
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
       as: 'owner',
