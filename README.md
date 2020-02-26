@@ -18,11 +18,11 @@ Type of requests that can be run on "User" and "Course" routes with Postman:
 **\*\*** *Requires Login, see **Routes That Require a Login***
 
 ### Course Routes
-- GET https://localhost:5000/api/courses
-- GET https://localhost:5000/api/courses/:id
-- POST https://localhost:5000/api/courses **\*\***
-- PUT http://localhost:5000/api/courses/:id **\*\***
-- DELETE http://localhost:5000/api/courses/:id **\*\***
+- `GET` https://localhost:5000/api/courses
+- `GET` https://localhost:5000/api/courses/:id
+- `POST` https://localhost:5000/api/courses **\*\***
+- `PUT` http://localhost:5000/api/courses/:id **\*\***
+- `DELETE` http://localhost:5000/api/courses/:id **\*\***
 
 **\*\*** *Requires Login, **Routes That Require a Login***
 
