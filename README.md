@@ -24,7 +24,7 @@ Type of requests that can be run on "User" and "Course" routes with Postman:
 - `PUT` http://localhost:5000/api/courses/:id **\*\***
 - `DELETE` http://localhost:5000/api/courses/:id **\*\***
 
-**\*\*** *Requires Login, **Routes That Require a Login***
+**\*\*** *Requires Login, see **Routes That Require a Login***
 
 ## Download & Run
 To run this on your local machine:
