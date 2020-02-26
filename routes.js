@@ -76,9 +76,11 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res, next) => {
 // POST user(s)
 router.post('/users', asyncHandler(async (req, res, next) => {
   try {
-    req.body.password = await bcryptjs.hashSync(req.body.password);
     const user = await User.create(req.body);
-    res.status(201).end();
+    await user.update({
+      password: bcryptjs.hashSync(req.body.password)
+    });
+    res.status(201).location('/').end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
       const errorMessages = [];
@@ -111,7 +113,17 @@ router.get('/courses', asyncHandler(async (req, res, next) => {
 router.get('/courses/:id', asyncHandler(async (req, res, next) => {
   let course;
   try {
-    course = await Course.findByPk(req.params.id);
+    course = await Course.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [
+        {
+          model: User,
+          as: 'owner'
+        }
+      ]
+    });
     if (course === null) {
       throw new Error('Course not found');
     } else {
@@ -129,8 +141,8 @@ router.get('/courses/:id', asyncHandler(async (req, res, next) => {
 // POST course(s)
 router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
-    await Course.create(req.body);
-    res.status(201).end();
+    const course = await Course.create(req.body);
+    res.status(201).location(`/courses/${course.id}`).end();
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
       const errorMessages = [];
