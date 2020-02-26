@@ -1,6 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
 
+// User Model
 module.exports = (sequelize) => {
   class User extends Sequelize.Model {}
   User.init({
@@ -23,7 +24,6 @@ module.exports = (sequelize) => {
     },
     lastName: {
       type: Sequelize.STRING,
-      notEmpty: true,
       validate: {
         notEmpty: {
           msg: 'Last name is required'
@@ -36,8 +36,10 @@ module.exports = (sequelize) => {
     },
     emailAddress: {
       type: Sequelize.STRING,
-      notEmpty: true,
       validate: {
+        notEmpty: {
+          msg: "Email is required"
+        },
         isEmail: {
           args: true,
           msg: "Email must be in correct format. (e.g., example@domain.com)"
@@ -46,10 +48,14 @@ module.exports = (sequelize) => {
     },
     password: {
       type: Sequelize.STRING,
-      notEmpty: true
+      validate: {
+        notEmpty: {
+          msg: "Password is required"
+        }
+      }
     }
   }, {sequelize});
-  
+
   // one-to-many association between User (Source) and Course (Target)
   User.associate = (models) => {
     User.hasMany(models.Course, {
