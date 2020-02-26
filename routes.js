@@ -36,26 +36,30 @@ const authenticateUser = async (req, res, next) => {
   // to find the user by email address
   // returns an array of users found
   if (credentials) {
-    const user = await User.findAll({
-      where: {
-        emailAddress: credentials.name
-      }
-    });
-
+    const users = await User.findAll();
+    const user = users.find(u => u.emailAddress === credentials.name);
+    
+    console.log(typeof users);
+    console.log(users[0].emailAddress);
+    
     // if user email address exists in db
     // verify the user's password in db against the 
     // credential's password given
-    if (user) {
-      const authenticated = bcryptjs
-      .compareSync(credentials.pass, user[0].dataValues.password);
-    } else {
-      message = `User ${user.emailAddress} not found.`;
-    }
+
+    // if (boolean) {
+    //   console.log(credentials.pass);
+    //   console.log(user[0].dataValues.password);
+    //   const authenticated = bcryptjs
+    //   .compareSync(credentials.pass, user[0].dataValues.password);
+    // } else {
+    //   message = `User ${credentials.name} not found`;
+    // }
   } else {
     message = 'Authorization header not found'
   }
 
   if (message) {
+    console.warn(message);
     res.status(401).json({message: 'Access Denied'});
   }
 
@@ -66,7 +70,6 @@ const authenticateUser = async (req, res, next) => {
 router.get('/users', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const users = await User.findAll();
-    console.log(users);
     res.status(200).json(users);
   } catch (error) {
     throw error
