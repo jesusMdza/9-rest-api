@@ -12,17 +12,17 @@ A REST API app for a school database that contains info about courses and users.
 ## Routes Available
 Type of requests that can be run on "User" and "Course" routes with Postman:
 ### User Routes
-- `GET` https://localhost:5000/api/users **\*\***
-- `POST` https://localhost:5000/api/users **\*\***
+- `GET` **https://localhost:5000/api/users** **\*\***
+- `POST` **https://localhost:5000/api/users** **\*\***
 
 **\*\*** *Requires Login, see **Routes That Require a Login***
 
 ### Course Routes
-- `GET` https://localhost:5000/api/courses
-- `GET` https://localhost:5000/api/courses/:id
-- `POST` https://localhost:5000/api/courses **\*\***
-- `PUT` http://localhost:5000/api/courses/:id **\*\***
-- `DELETE` http://localhost:5000/api/courses/:id **\*\***
+- `GET` **https://localhost:5000/api/courses**
+- `GET` **https://localhost:5000/api/courses/:id**
+- `POST` **https://localhost:5000/api/courses** **\*\***
+- `PUT` **http://localhost:5000/api/courses/:id** **\*\***
+- `DELETE` **http://localhost:5000/api/courses/:id** **\*\***
 
 **\*\*** *Requires Login, see **Routes That Require a Login***
 
@@ -31,9 +31,13 @@ To run this on your local machine:
 - `npm install`
 - `npm start`
 
+To know if the app is running successfully, please view your code editor's terminal and check for these messages:
+  - `Connection to the database has been successful`
+  - `Express server is listening on port 5000`
+
 ## Routes That Require a Login
 Some routes require a valid username and password in order to use them. You can achieve this in Postman by:
-- Creating a new user at https://localhost:5000/api/users
+- Creating a new user with a `POST` request at **https://localhost:5000/api/users** and using those credentials against the secured routes
 - Using this login:
   - Username: **sally@jones.com**
   - Password: **sallypassword**
