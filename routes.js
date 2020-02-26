@@ -30,40 +30,39 @@ const authenticateUser = async (req, res, next) => {
   // attempts to retrieve signed in user's credentials
   // returns object if successful {name: example@domain.com, pass: somePassword}
   const credentials = auth(req);
-  console.log(credentials);
 
   // if credentials are available, search through db
-  // to find the user by email address
-  // returns an array of users found
+  // and compare user with credential name given
   if (credentials) {
     const users = await User.findAll();
     const user = users.find(u => u.emailAddress === credentials.name);
     
-    console.log(typeof users);
-    console.log(users[0].emailAddress);
-    
-    // if user email address exists in db
-    // verify the user's password in db against the 
-    // credential's password given
+    // if user exists in db, compare passwords from db and credentials
+    if (user) {
+      const authenticated = bcryptjs
+      .compareSync(credentials.pass, user.password);
 
-    // if (boolean) {
-    //   console.log(credentials.pass);
-    //   console.log(user[0].dataValues.password);
-    //   const authenticated = bcryptjs
-    //   .compareSync(credentials.pass, user[0].dataValues.password);
-    // } else {
-    //   message = `User ${credentials.name} not found`;
-    // }
+      // if passwords match
+      if (authenticated) {
+        console.log(`Authentication successful for user ${credentials.name}`);
+      } else {
+        message = `Failed to authenticate user ${credentials.name}`;
+      }
+    } else {
+      message = `User ${credentials.name} not found`;
+    }
   } else {
     message = 'Authorization header not found'
   }
 
+  // if authentication failed, send a message denying the user access to a secure route
+  // else, grant the user access to the secure route
   if (message) {
     console.warn(message);
     res.status(401).json({message: 'Access Denied'});
+  } else {
+    next();
   }
-
-  next();
 }
 
 // GET user(s)
@@ -122,7 +121,6 @@ router.get('/courses/:id', asyncHandler(async (req, res, next) => {
     }
   } catch (error) {
     if (course === null) {
-      console.log(error);
       res.status(404).json({message: error.message});
     } else {
       throw error;
