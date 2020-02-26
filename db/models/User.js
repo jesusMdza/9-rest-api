@@ -49,7 +49,7 @@ module.exports = (sequelize) => {
       notEmpty: true
     }
   }, {sequelize});
-
+  
   // one-to-many association between User (Source) and Course (Target)
   User.associate = (models) => {
     User.hasMany(models.Course, {
