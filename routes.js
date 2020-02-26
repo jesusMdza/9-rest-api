@@ -21,8 +21,6 @@ function asyncHandler(callback) {
   }
 }
 
-// TO DO ========== FIND A WAY TO LOG A MESSAGE WHEN AUTHENTICATION FAILS
-
 // identify a user based on their credentials
 const authenticateUser = async (req, res, next) => {
   let message;
