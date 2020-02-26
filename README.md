@@ -36,7 +36,7 @@ To know if the app is running successfully, please view your code editor's termi
   - `Express server is listening on port 5000`
 
 ## Routes That Require a Login
-Some routes require a valid username and password in order to use them. You can achieve this in Postman by:
+Some routes require a valid username and password in order to use them. You can achieve this in *Postman*/* by:
 - Creating a new user with a `POST` request at **https://localhost:5000/api/users** and using those credentials against the secured routes
 - Using this login:
   - Username: **sally@jones.com**
