@@ -43,6 +43,7 @@ const authenticateUser = async (req, res, next) => {
       // if passwords match
       if (authenticated) {
         console.log(`Authentication successful for user ${credentials.name}`);
+        req.currentUser = user;
       } else {
         message = `Failed to authenticate user ${credentials.name}`;
       }
@@ -63,11 +64,16 @@ const authenticateUser = async (req, res, next) => {
   }
 }
 
-// GET user(s)
+// GET authenticated user(s)
 router.get('/users', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
-    const users = await User.findAll();
-    res.status(200).json(users);
+    console.log(req.currentUser);
+    const user = await User.findOne({
+      where: {
+        id: req.currentUser.id
+      }
+    });
+    res.status(200).json(user);
   } catch (error) {
     throw error
   }
@@ -158,6 +164,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) =>
 router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const course = await Course.findByPk(req.params.id);
+    console.log(req.body);
     await course.update(req.body);
     res.status(204).end();
   } catch (error) {
