@@ -12,33 +12,45 @@ module.exports = (sequelize) => {
     },
     firstName: {
       type: Sequelize.STRING,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: "First name is required"
+        },
         notEmpty: {
-          msg: 'First name is required'
+          msg: 'First name cannot be empty'
         },
         is: {
-          args: /^[a-z]+$/i,
-          msg: "First name must contain letters only"
+          args: /^[a-z ,.'-]+$/i,
+          msg: "First name must contain letters and or ,.'- characters only"
         }
       }
     },
     lastName: {
       type: Sequelize.STRING,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: "Last name is required"
+        },
         notEmpty: {
-          msg: 'Last name is required'
+          msg: "Last name cannot be empty"
         },
         is: {
-          args: /^[a-z]+$/i,
-          msg: "Last name must contain letters only"
+          args: /^[a-z ,.'-]+$/i,
+          msg: "Last name must contain letters and or ,.'- characters only"
         }
       }
     },
     emailAddress: {
       type: Sequelize.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: {
+        notNull: {
           msg: "Email is required"
+        },
+        notEmpty: {
+          msg: "Email cannot be empty"
         },
         isEmail: {
           args: true,
@@ -48,9 +60,13 @@ module.exports = (sequelize) => {
     },
     password: {
       type: Sequelize.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: {
+        notNull: {
           msg: "Password is required"
+        }, 
+        notEmpty: {
+          msg: "Password cannot be empty"
         }
       }
     }

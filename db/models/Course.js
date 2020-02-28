@@ -12,17 +12,25 @@ module.exports = (sequelize) => {
     },
     title: {
       type: Sequelize.STRING,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: "Title is required"
+        },
         notEmpty: {
-          msg: 'Title is required'
+          msg: "Title cannot be empty"
         }
       }
     },
     description: {
       type: Sequelize.TEXT,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: "Description is required"
+        },
         notEmpty: {
-          msg: 'Description is required'
+          msg: "Description cannot be empty"
         }
       }
     },
@@ -42,8 +50,13 @@ module.exports = (sequelize) => {
       as: 'owner',
       foreignKey: {
         fieldName: 'userId',
-        allowNull: false
-      }
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "User ID (userId) is required"
+          }
+        }
+      },
     });
   }
 
