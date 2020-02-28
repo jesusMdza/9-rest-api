@@ -13,7 +13,7 @@ A REST API app for a school database that contains info about courses and users.
 Type of requests that can be run on "User" and "Course" routes with Postman:
 ### User Routes
 - `GET` **https://localhost:5000/api/users** **\*\***
-- `POST` **https://localhost:5000/api/users** **\*\***
+- `POST` **https://localhost:5000/api/users
 
 **\*\*** *Requires Login, see **Routes That Require a Login***
 
