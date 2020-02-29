@@ -163,8 +163,16 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) =>
 // PUT (update) course(s)
 router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
+    // manual error message workaround due to sequelize validations not working.
+    if (!req.body.title || !req.body.description) {
+      const customErr = new Error(400);
+      customErr.name = 'SequelizeValidationError';
+      customErr.errors = []
+      if (!req.body.title) customErr.errors.push( { message: "Title is required" } );
+      if (!req.body.description) customErr.errors.push( { message: "Description is required" } );
+      throw customErr;
+    }
     const course = await Course.findByPk(req.params.id);
-    console.log(req.body);
     await course.update(req.body);
     res.status(204).end();
   } catch (error) {
