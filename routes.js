@@ -67,7 +67,6 @@ const authenticateUser = async (req, res, next) => {
 // GET authenticated user(s)
 router.get('/users', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.currentUser);
     const user = await User.findOne({
       where: {
         id: req.currentUser.id
