@@ -32,6 +32,7 @@ const authenticateUser = async (req, res, next) => {
   // if credentials are available, search through db
   // and compare user with credential name given
   if (credentials) {
+    console.log(credentials);
     const users = await User.findAll();
     const user = users.find(u => u.emailAddress === credentials.name);
     
@@ -163,9 +164,15 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res, next) =>
 router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   try {
     const course = await Course.findByPk(req.params.id);
-    await course.update(req.body);
+    course.title = req.body.title || "";
+    course.description = req.body.description || "";
+    course.estimatedTime = req.body.estimatedTime || "";
+    course.materialsNeeded = req.body.materialsNeeded || "";
+
+    await course.save();
     res.status(204).end();
   } catch (error) {
+    console.log(error);
     if (error.name === 'SequelizeValidationError') {
       const errorMessages = [];
       error.errors.map(error => errorMessages.push(error.message));
